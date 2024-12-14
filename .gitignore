@@ -1,0 +1,105 @@
+# 빌드 출력물
+/build/
+/out/
+/bin/
+/obj/
+*.o
+*.so
+*.a
+*.lib
+*.dll
+*.exe
+*.log
+*.tmp
+
+# CMake 관련 파일
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+*.cmake
+*.ninja
+
+# IDE/에디터별 설정 파일
+.idea/
+.vscode/
+*.swp
+*.swo
+*.sublime-workspace
+*.sublime-project
+*.code-workspace
+
+# 운영체제별 불필요 파일
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 환경 파일
+.env
+.env.local
+.env.*.local
+config/*.json
+config/*.yaml
+config/*.yml
+config/*.ini
+
+# 로그 파일
+logs/
+*.log
+
+# SSL 키 및 인증서
+certs/
+*.crt
+*.key
+*.pem
+
+# 테스트 출력물
+/tests/output/
+*.testresult
+
+# 데이터베이스 관련
+*.sqlite
+*.db
+*.db-journal
+
+# 암호화 및 보안 관련
+keys/
+secrets/
+*.key
+*.cert
+*.p12
+*.pfx
+
+# 노드 모듈 및 종속성
+node_modules/
+package-lock.json
+yarn.lock
+
+# Python 관련 파일
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+
+# Docker 관련
+docker-compose.override.yml
+docker-compose.local.yml
+*.tar
+*.tgz
+*.dockerfile
+
+# Kubernetes 관련
+*.kubeconfig
+*.helmrelease
+*.secret
+
+# AWS/GCP/Azure 등 클라우드 설정
+*.tfstate
+*.tfvars
+*.credentials
+*.json
+
+# 기타
+*.bak
+*.old

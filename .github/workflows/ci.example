@@ -1,0 +1,35 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build Docker Image
+        run: docker build -f docker/Dockerfile.dev -t trading-system:test .
+
+      - name: Run Tests
+        run: |
+          docker run --rm trading-system:test /app/build/unit_tests
+          docker run --rm trading-system:test /app/build/integration_tests
+
+      - name: Security Scan
+        uses: anchore/scan-action@v2
+        with:
+          image: "trading-system:test"
+          fail-build: true
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Deploy to Production
+        run: echo "Deployment steps here"
