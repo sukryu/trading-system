@@ -1,110 +1,142 @@
-# Secure Trading System
+# High-Performance Trading System
 
-## 📌 프로젝트 소개
-**Secure Trading System**은 암호화폐 및 주식 거래를 안전하게 관리하기 위한 고성능 거래 시스템입니다.  
-이 시스템은 강력한 보안, 확장성, 신뢰성을 갖춘 거래 플랫폼으로 설계되었으며, API를 통해 사용자와 애플리케이션 간의 효율적인 통합을 제공합니다.
-
----
-
-## 📂 주요 기능
-- **실시간 시장 데이터 관리**: 다양한 거래소에서 수집된 데이터를 기반으로 실시간 가격 및 볼륨 업데이트.
-- **자동화된 거래 신호**: 전략 기반의 거래 신호 생성 및 관리.
-- **주문 및 거래 관리**: 안전하고 빠른 주문 생성, 체결 및 기록.
-- **보안 강화**:
-  - 암호화 키 관리 및 분할 저장 (Shamir’s Secret Sharing)
-  - IP 화이트리스트 및 비정상 활동 감지
-  - 암호화 작업 감사 로그와 경고 시스템
-- **확장성 및 모니터링**:
-  - PostgreSQL, Redis, Kubernetes 기반의 확장 가능한 구조
-  - Prometheus 및 Grafana로 실시간 시스템 모니터링
+## 📖 프로젝트 개요
+**High-Performance Trading System**은 암호화폐 및 주식 시장의 매수/매도 거래를 처리하며, **보안**, **성능**, **확장성**을 중심으로 설계된 시스템입니다.  
+현재 개인 사용자를 대상으로 개발 중이며, 추후 **API 키**를 통해 외부 사용자에게 서비스를 제공할 계획입니다.
 
 ---
 
-## 🛠️ 기술 스택
-- **Backend**: C++, Drogon Framework
-- **Database**: PostgreSQL, Redis
-- **Monitoring**: Prometheus, Grafana
-- **CI/CD**: GitHub Actions
-- **Security**: OpenSSL, Shamir’s Secret Sharing
-- **Infrastructure**: Docker, Kubernetes, Helm
+## ✨ 주요 목표 및 특징
+
+### 보안 강화
+- **민감한 데이터 보호**를 위한 강력한 암호화 및 키 관리.
+- **Shamir's Secret Sharing**, **HSM 통합**, 키 분할/복구 지원.
+- **IP 화이트리스트**, 작업 비율 제한, 의심스러운 활동 탐지 및 경고 시스템.
+
+### 성능 최적화
+- 고성능 **PostgreSQL 데이터베이스 설계** 및 효율적인 인덱싱.
+- **병렬 처리** 및 비동기 작업을 통한 빠른 응답.
+- **Redis 캐싱**으로 트래픽 부하 감소.
+
+### 확장성
+- **마이크로서비스 아키텍처**를 기반으로 설계.
+- **Kubernetes**를 이용한 컨테이너 오케스트레이션.
+- 지속적인 확장을 고려한 **데이터 파티셔닝** 및 **메시징 큐(Kafka)** 통합.
+
+### 사용자 및 관리 도구
+- 사용자 관리, 거래 기록, 알림 설정 제공.
+- 관리 UI를 통해 위험 분석 및 알림 관리 지원.
 
 ---
 
-## 🚀 시작하기
+## 🏗️ 지금까지 작업한 주요 내용
 
-### 1. 요구 사항
-- **OS**: Linux/Unix
-- **C++ Compiler**: GCC 13.0 이상
-- **Database**: PostgreSQL 14.x 이상, Redis 6.x 이상
-- **추가 패키지**:
-  - OpenSSL
-  - Drogon Framework
-  - CMake 3.20 이상
+### 1. 키 관리 및 보안
+- **KeyGenerator** 클래스:
+  - 하드웨어 기반 키 생성 (Intel RNG 지원).
+  - 키 분할 및 복구 (Shamir's Secret Sharing).
+  - 강력한 엔트로피 수집 및 검증.
+- **Key Metadata** 테이블:
+  - 키 상태 관리 (e.g., active, revoked).
+  - 키 공유 데이터 및 암호화 메타데이터 저장.
+- **Crypto Auditor**:
+  - 모든 암호화 작업 로깅.
+  - **IP 화이트리스트** 및 작업 비율 초과 탐지.
+  - 의심스러운 활동 탐지 및 경고 알림 구현.
 
-### 2. 설치
+### 2. 데이터베이스 설계
+- **거래 및 신호 관리**:
+  - `market_data`, `trading_signals`, `orders`, `trades` 테이블 설계.
+  - 시장 데이터, 매수/매도 신호, 주문 및 거래 내역 저장.
+- **사용자 및 설정 관리**:
+  - `users`, `user_settings` 테이블 설계.
+  - API 키, 거래 전략, 위험 관리 매개변수 저장.
+- **보안 및 감사 로깅**:
+  - `crypto_audit_logs` 및 `crypto_alerts` 테이블 설계.
+  - `ip_whitelist` 테이블을 통한 접근 제어.
 
-1. **코드 클론**
-   ```bash
-   git clone https://github.com/sukryu/trading-system.git
-   cd trading-system
+### 3. 보안 기능 구현
+- **IP 화이트리스트 확인**:
+  - 사용자의 등록된 IP만 접근 허용.
+  - 비활성화된 IP 차단.
+- **알림 및 경고 시스템**:
+  - 비정상적 활동 탐지(다수의 실패한 작업, 미등록 IP 접근 등).
+  - 관리자 또는 보안 팀에 경고 발송.
+- **작업 비율 제한**:
+  - 특정 작업의 초과 호출 제한.
 
-2. **빌드**
-    ```bash
-    mkdir build && cd build
-    cmake ..
-    make -j$(nproc)
-    ```
+### 4. 테스트 및 트러블슈팅
+- 하드웨어 기반 키 생성 및 관련 오류 해결.
+- 테이블 스키마 및 외래키 참조 검증.
+- CryptoAuditor 관련 로직에 유닛 테스트 추가.
 
-3. 환경 파일 설정 프로젝트 루트에 `.env`파일을 생성하고 다음 내용을 추가합니다.
-    ```makefile
-    DB_HOST=localhost
-    DB_PORT=5432
-    DB_USER=your_user
-    DB_PASSWORD=your_password
-    REDIS_HOST=localhost
-    REDIS_PORT=6379
-    ```
+---
 
-4. 데이터베이스 초기화
-    ```bash
-    psql -U your_user -d your_database -f schema.sql
-    ```
+## 📋 주요 데이터베이스 테이블 요약
 
-5. 애플리케이션 실행
-    ```bash
-    ./trading_system
-    ```
+### 1. 거래 데이터
+- **`market_data`**: 시장 데이터 (가격, 볼륨, 타임스탬프 등).
+- **`trading_signals`**: 매수/매도 신호 및 전략.
+- **`orders`**: 거래 주문, 상태, 관련 신호 ID.
+- **`trades`**: 실제 거래 내역, 수수료 등.
 
-## 📄 사용 방법
+### 2. 사용자 및 보안
+- **`users`**: 사용자 계정 정보.
+- **`user_settings`**: 사용자 환경 설정, 거래 전략.
+- **`ip_whitelist`**: 화이트리스트에 등록된 IP 정보.
+- **`operation_rate_limits`**: 작업 비율 제한 관리.
 
-1. API
-    - Market Data
-        - `GET /api/market_data`
-        - 시장 데이터를 조회합니다.
+### 3. 키 관리
+- **`key_metadata`**: 키 메타데이터 관리.
+- **`key_shares`**: 키 분할 데이터를 저장.
+- **`crypto_audit_logs`**: 암호화 작업 감사 로그.
+- **`crypto_alerts`**: 알림 및 경고 로그.
 
-    - Trading Signals
-        - `POST /api/trading_signals`
-        - 거래 신호를 생성합니다.
+---
 
-    - Orders
-        - `POST /api/orders`
-        - 주문을 생성합니다.
+## 🔨 현재 작업 중인 내용
 
-2. 보안 관리
-    - IP 화이트리스트: 비정상적인 활동 감지를 위한 IP 관리.
-    - 암호화 키 관리: 민감한 데이터를 보호하기 위한 키 생성 및 복구.
+### 1. 알림 및 보안 기능 강화
+- `CryptoAuditor::isKnownIpAddress` 수정 및 테스트.
+- 의심스러운 IP 접근 탐지 및 경고 알림 통합.
 
-## 📊 모니터링 및 로깅
-    - Prometheus: 애플리케이션 성능 및 리소스 모니터링.
-    - Grafana: 대시보드 시각화
-    - 로그 관리: 운영 중 발생하는 오류 및 작업 상태를 실시간으로 로깅.
+### 2. 키 관리 로직 개선
+- HSM과의 통합.
+- 키 복구 시 성능 및 안정성 개선.
 
-## 📜 라이선스
-이 프로젝트는 MIT License에 따라 배포됩니다.
+### 3. 트랜잭션 로직 개선
+- 주문 생성(`orders`) 및 신호 처리(`trading_signals`) 간 연계 작업.
+- 주문 상태 변경 로직 개선 (예: `FILLED`, `CANCELLED`).
 
+### 4. 테스트 환경 구축
+- 데이터베이스 마이그레이션 자동화.
+- 통합 테스트 작성 (테스트 데이터 자동화).
 
-### 📌 주요 내용
-- 프로젝트 소개와 주요 기능
-- 설치 및 시작 방법
-- API와 사용 예시
-- 프로젝트 라이선스
+---
+
+## 🚀 향후 작업 계획
+
+### 1. 모니터링 및 로깅 도구 통합
+- **Prometheus 및 Grafana**를 이용한 시스템 상태 모니터링.
+- **ELK 스택**으로 로그 분석.
+
+### 2. 관리 UI 개발
+- 사용자 관리, 거래 내역 확인, 위험 설정 등 지원.
+- **React + Material-UI** 기반 인터페이스 구축.
+
+### 3. 고급 암호화 기능
+- 암호화 키의 주기적 롤링(Key Rotation).
+- 데이터 복구를 위한 분산형 키 관리.
+
+### 4. API 서비스 확장
+- 외부 사용자를 위한 **RESTful API 개발**.
+- API 키 관리 및 사용량 제한 기능 구현.
+
+### 5. 시스템 성능 최적화
+- 쿼리 성능 향상 (인덱스 최적화, 파티셔닝).
+- Redis 캐싱 추가로 읽기 성능 강화.
+
+---
+
+## 📄 라이선스
+이 프로젝트는 MIT 라이선스를 따릅니다. 자세한 내용은 [LICENSE](./LICENSE)를 참조하세요.
