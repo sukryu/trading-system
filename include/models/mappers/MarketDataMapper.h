@@ -18,37 +18,37 @@ namespace models {
             static MarketDataMapper& getInstance();
 
             // 기본 CRUD
-            MarketData insert(
-                const MarketData& marketData,
+            std::shared_ptr<MarketData> insert(
+                const std::shared_ptr<MarketData>& marketData,
                 Transaction& transaction
             );
-            MarketData insert(const MarketData& marketData);
+            std::shared_ptr<MarketData> insert(const std::shared_ptr<MarketData>& marketData);
 
-            MarketData findById(int64_t id);
-            std::vector<MarketData> findWithPaging(size_t limit, size_t offset);
+            std::shared_ptr<MarketData> findById(int64_t id);
+            std::vector<std::shared_ptr<MarketData>> findWithPaging(size_t limit, size_t offset);
             size_t count();
-            
-            void update(const MarketData& marketData, Transaction& transaction);
-            void update(const MarketData& marketData);
-            
+
+            void update(const std::shared_ptr<MarketData>& marketData, Transaction& transaction);
+            void update(const std::shared_ptr<MarketData>& marketData);
+
             void deleteById(int64_t id, Transaction& transaction);
             void deleteById(int64_t id);
 
             // 특화된 쿼리 메서드
-            MarketData findLatestBySymbol(const std::string& symbol);
+            std::shared_ptr<MarketData> findLatestBySymbol(const std::string& symbol);
             
-            std::vector<MarketData> findBySymbolWithLimit(
+            std::vector<std::shared_ptr<MarketData>> findBySymbolWithLimit(
                 const std::string& symbol,
                 size_t limit
             );
 
-            std::vector<MarketData> findBySymbolAndTimeRange(
+            std::vector<std::shared_ptr<MarketData>> findBySymbolAndTimeRange(
                 const std::string& symbol,
                 const trantor::Date& start,
                 const trantor::Date& end,
                 Transaction& transaction
             );
-            std::vector<MarketData> findBySymbolAndTimeRange(
+            std::vector<std::shared_ptr<MarketData>> findBySymbolAndTimeRange(
                 const std::string& symbol,
                 const trantor::Date& start,
                 const trantor::Date& end

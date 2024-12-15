@@ -17,7 +17,7 @@ endif()
 # 컴파일러 플래그
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -mrdrnd")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -O0")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -DNDEBUG")
 
 # 의존성 패키지 찾기
 find_package(Drogon REQUIRED)
@@ -25,6 +25,10 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(JSONCPP jsoncpp)
 find_package(spdlog REQUIRED)
 find_package(OpenSSL REQUIRED)
+# libcds 및 의존성 찾기
+find_package(CDS REQUIRED)
+find_package(TBB REQUIRED)
+find_package(Boost REQUIRED)
 
 # PostgreSQL 찾기
 find_package(PostgreSQL REQUIRED)
@@ -83,6 +87,10 @@ set(SOURCES
     src/secure/EncyptionManager.cpp
     src/secure/SensitiveDataHandler.cpp
     src/secure/IpWhitelistManager.cpp
+    # memory
+    src/memory/PoolMemoryResource.cpp
+    # containers
+    src/containers/LockFreeContainers.cpp
 )
 
 # 메인 실행 파일 생성
@@ -93,6 +101,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${JSONCPP_INCLUDE_DIRS}
     ${PostgreSQL_INCLUDE_DIRS}
+    ${CDS_INCLUDE_DIRS}
+    ${TBB_INCLUDE_DIRS}
 )
 
 # 라이브러리 링크
